@@ -3,74 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maths | Senal Devinuwara</title>
+    <title>Maths Guides | Senal Devinuwara</title>
     <style>
         :root { 
             --bg: #ffffff; 
             --text: #1a1a1a; 
             --accent: #007aff; 
             --subtle: #8e8e93;
+            --card-bg: #f5f5f7; 
             --border: #e5e5e7;
         }
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            line-height: 1.6; color: var(--text); margin: 0; background: var(--bg); 
+            line-height: 1.6; 
+            color: var(--text); 
+            margin: 0; 
+            background: var(--bg); 
+            padding: 0 25px; /* Added padding to body for overall spacing */
         }
 
-        /* --- NAVIGATION --- */
+        /* --- NAVIGATION BAR STYLES (Repeat from index.html) --- */
         nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 40px; border-bottom: 1px solid var(--border);
-            position: sticky; top: 0; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 40px;
+            max-width: 700px; /* Aligns with main content */
+            margin-left: auto;
+            margin-right: auto;
         }
-        .nav-logo { font-weight: 800; font-size: 1.2rem; text-decoration: none; color: var(--text); }
-        .nav-links a { text-decoration: none; color: var(--subtle); font-size: 0.9rem; font-weight: 500; margin-left: 20px; }
+
+        .nav-logo {
+            font-weight: 800;
+            font-size: 1.2rem;
+            text-decoration: none;
+            color: var(--text);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--subtle);
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+        /* ----------------------------------------------------- */
+
+        .page-header {
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            text-align: center;
+        }
+        .page-header h1 {
+            font-weight: 800;
+            font-size: 3rem;
+            letter-spacing: -0.03em;
+            margin-bottom: 10px;
+        }
+        .page-header p {
+            font-size: 1.1rem;
+            color: var(--subtle);
+        }
 
         .container {
-            display: flex; max-width: 1000px; margin: 0 auto; padding: 60px 20px; gap: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1000px; /* Wider container for content + TOC */
+            margin: 0 auto;
         }
 
-        /* --- SIDEBAR & DYNAMIC PROGRESS LINE --- */
-        .sidebar {
-            flex: 0 0 220px; position: sticky; top: 120px; align-self: flex-start;
-            padding-right: 20px; border-right: 1px solid var(--border); /* The thin gray line */
+        .main-content {
+            flex: 3; /* Takes 3 parts of the space */
+            max-width: 700px;
+            background: var(--bg);
+            padding-bottom: 80px;
         }
 
-        /* The blue line that fills in */
-        #progress-indicator {
-            position: absolute; right: -1px; top: 0; width: 2px;
-            background: var(--accent); height: 0%; transition: height 0.1s ease-out;
+        .main-content h2 {
+            font-weight: 700;
+            font-size: 1.8rem;
+            margin-top: 3.5rem;
+            margin-bottom: 1.5rem;
         }
 
-        .toc-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 20px; color: var(--text); }
+        .main-content h3 {
+            font-weight: 600;
+            font-size: 1.4rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent); /* Highlight H3s as TOC targets */
+        }
+
+        /* --- TABLE OF CONTENTS (TOC) STYLES --- */
+        .toc-aside {
+            flex: 1; /* Takes 1 part of the space */
+            max-width: 250px;
+            position: sticky;
+            top: 100px; /* Adjust if your nav bar is taller */
+            align-self: flex-start; /* Stays at the top */
+            padding-left: 20px;
+            font-size: 0.9rem;
+            color: var(--subtle);
+        }
+
+        .toc-aside ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-aside li {
+            margin-bottom: 8px;
+            position: relative; /* For the active line */
+        }
+
+        .toc-aside a {
+            text-decoration: none;
+            color: var(--subtle);
+            transition: color 0.2s;
+            display: block; /* Make the whole area clickable */
+            padding-left: 10px; /* Space for the line */
+        }
+
+        .toc-aside a:hover {
+            color: var(--accent);
+        }
+
+        .toc-aside .active-link {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* The scrolling line indicator */
+        .toc-aside li .active-line {
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--accent);
+            border-radius: 2px;
+            opacity: 0; /* Hidden by default */
+            transition: opacity 0.2s;
+        }
+
+        .toc-aside .active-link .active-line {
+            opacity: 1; /* Visible when active */
+        }
+        /* -------------------------------------- */
         
-        .unit-group { margin-bottom: 15px; }
-        .unit-toggle { 
-            font-size: 0.9rem; font-weight: 600; color: var(--accent); cursor: pointer; 
-            display: flex; justify-content: space-between; align-items: center;
-        }
+        footer { margin-top: 80px; padding-bottom: 40px; font-size: 0.9rem; color: var(--subtle); text-align: center; max-width: 700px; margin-left: auto; margin-right: auto;}
         
-        .sub-links { list-style: none; padding: 10px 0 0 10px; margin: 0; display: none; }
-        .sub-links.open { display: block; }
-        .sub-links a { 
-            text-decoration: none; color: var(--subtle); font-size: 0.85rem; 
-            display: block; margin-bottom: 8px; transition: 0.2s;
-        }
-        .sub-links a:hover, .sub-links a.active { color: var(--accent); }
-
-        /* --- CONTENT --- */
-        .main-content { flex: 1; max-width: 700px; }
-        h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 40px; }
-        h2 { font-size: 2rem; margin-top: 60px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
-        h3 { font-size: 1.4rem; margin-top: 40px; color: var(--text); }
-        p { color: #3a3a3c; font-size: 1.05rem; margin-bottom: 20px; }
-        .spacer { height: 400px; }
-
-        @media (max-width: 800px) {
-            .container { flex-direction: column; }
-            .sidebar { position: relative; top: 0; border-right: none; border-bottom: 1px solid var(--border); width: 100%; }
-            #progress-indicator { display: none; }
+        /* Mobile adjustments */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .toc-aside {
+                position: relative; /* Not sticky on mobile */
+                top: auto;
+                max-width: 100%;
+                padding-left: 0;
+                order: -1; /* Puts TOC above content on mobile */
+                border-bottom: 1px solid var(--border);
+                padding-bottom: 20px;
+            }
+            .nav-links { margin-top: 10px; }
+            nav { flex-direction: column; gap: 15px; margin-bottom: 20px; }
+            .main-content { max-width: 100%; }
         }
     </style>
 </head>
@@ -80,65 +194,147 @@
         <a href="index.html" class="nav-logo">senal.dev</a>
         <div class="nav-links">
             <a href="index.html">Home</a>
-            <a href="maths.html" style="color: var(--accent)">Maths</a>
-            <a href="science.html">Science</a>
+            <a href="maths.html" class="active-link">Maths</a> <a href="science.html">Science</a>
             <a href="research.html">Papers</a>
+            <a href="arts.html">Arts</a>
+            <a href="CV.html">CV</a>
         </div>
     </nav>
 
-    <div class="container">
-        <aside class="sidebar">
-            <div id="progress-indicator"></div>
-            <div class="toc-title">On This Page</div>
-            
-            <div class="unit-group">
-                <div class="unit-toggle" onclick="toggleSub('calc-sub')">Calculus ▾</div>
-                <ul class="sub-links" id="calc-sub">
-                    <li><a href="#calc1" class="toc-link">Calculus I</a></li>
-                    <li><a href="#calc2" class="toc-link">Calculus II</a></li>
-                    <li><a href="#calc3" class="toc-link">Calculus III</a></li>
-                </ul>
-            </div>
+    <div class="page-header">
+        <h1>The World of Mathematics</h1>
+        <p>From the foundations of Calculus to the abstractions of Pure Math, explore my guides and notes on fascinating mathematical topics.</p>
+    </div>
 
-            <div class="unit-group">
-                <div class="unit-toggle" onclick="toggleSub('linear-sub')">Linear Algebra ▾</div>
-                <ul class="sub-links" id="linear-sub">
-                    <li><a href="#vectors" class="toc-link">Vectors</a></li>
-                    <li><a href="#matrices" class="toc-link">Matrices</a></li>
+    <div class="container">
+        <aside class="toc-aside">
+            <h3 style="margin-top:0; font-size:1rem; color:var(--text);">On This Page</h3>
+            <ul id="toc-list">
                 </ul>
-            </div>
         </aside>
 
         <main class="main-content">
-            <h1>The World of Mathematics</h1>
             
-            <section id="calc1">
-                <h2>Calculus I</h2>
-                <h3>The Language of Change</h3>
-                <p>Calculus I introduces the concepts of limits and derivatives. It's about understanding the exact slope of a curve at a single point.</p>
-                            </section>
+            <section>
+                <h2>Calculus</h2>
+                
+                <h3 id="calculus-i">1. Calculus I: The Language of Change</h3>
+                <p>Calculus I introduces the fundamental concepts of limits, derivatives, and their applications. It's all about understanding instantaneous rates of change and the slope of a curve at any given point.</p>
+                <p><strong>Analogy: The Speedometer.</strong> If Algebra gives you an average speed over a journey, Calculus I is like the speedometer, telling you the exact speed at every single moment, even when you're accelerating or braking.</p>
+                <h3 id="calculus-ii">2. Calculus II: The Art of Accumulation</h3>
+                <p>Calculus II delves into integration, which is essentially the reverse process of differentiation. It focuses on finding the area under curves, volumes of complex shapes, and the summation of infinite series.</p>
+                <p><strong>Analogy: The Odometer.</strong> If Calculus I tells you your instantaneous speed, Calculus II is like the odometer, adding up all those tiny, changing speeds to give you the total distance traveled.</p>
+                <h3 id="calculus-iii">3. Calculus III: Navigating Higher Dimensions</h3>
+                <p>Calculus III extends the concepts of derivatives and integrals into three-dimensional space and beyond. It deals with multivariable functions, vectors, and the complexities of change across multiple dimensions.</p>
+                <p><strong>Analogy: The Mountain Map.</strong> Imagine a hiking map with contour lines. Calculus III helps you understand not just how steep a path is (partial derivatives), but also the exact direction of the steepest ascent (the gradient vector) on a complex mountain surface.</p>
+                </section>
 
-            <section id="calc2">
-                <h2>Calculus II</h2>
-                <h3>The Art of Accumulation</h3>
-                <p>Here we explore integration—adding up infinite tiny slices to find the total area or volume of complex shapes.</p>
-                            </section>
-
-            <section id="calc3">
-                <h2>Calculus III</h2>
-                <h3>Navigating Higher Dimensions</h3>
-                <p>Extending calculus into 3D space. We use gradients to find the steepest path up a mathematical surface.</p>
-                            </section>
-
-            <section id="vectors">
+            <section>
                 <h2>Linear Algebra</h2>
-                <h3>Vectors & Matrices</h3>
-                <p>The foundations of data science. We treat lists of numbers as points in space and transform them using matrices.</p>
-            </section>
+                <h3 id="linear-algebra-intro">Introduction to Vectors and Matrices</h3>
+                <p>Linear Algebra is the study of vectors, vector spaces, linear transformations, and systems of linear equations. It's the language of data science, computer graphics, and machine learning.</p>
+                <p><strong>Analogy: The Choreography.</strong> Think of a dance troupe. Linear Algebra is like the choreographer, telling each dancer (vector) where to move and how to transform their positions in a coordinated system (matrix operations).</p>
+                <h3 id="eigenvalues">Eigenvalues and Eigenvectors</h3>
+                <p>These concepts are crucial for understanding the fundamental behavior of linear transformations. Eigenvectors are special vectors that are only scaled (stretched or compressed) by a linear transformation, without changing direction.</p>
+                </section>
 
-            <div class="spacer"></div>
-        </main>
+            <section>
+                <h2>Pure Mathematics</h2>
+                <h3 id="pure-math-intro">Exploring the Foundations of Math</h3>
+                <p>Pure Mathematics focuses on abstract concepts and the fundamental nature of mathematics itself, often without direct real-world applications in mind. It builds logical structures and proofs from basic axioms.</p>
+                <p><strong>Analogy: The Architect.</strong> If applied math builds houses, pure math designs the blueprints for how all possible buildings could be constructed, exploring the perfect geometry and structural integrity without a specific client in mind.</p>
+                <h3 id="set-theory">Set Theory and Logic</h3>
+                <p>The bedrock of modern mathematics, set theory defines how collections of objects (sets) behave, while mathematical logic provides the rules for reasoning and proof.</p>
+                </section>
+
+            </main>
     </div>
+
+    <footer>
+        <p>&copy; 2025 • Senal Devinuwara</p>
+    </footer>
+
+    <script>
+        // JavaScript for Table of Contents (TOC) with active highlighting
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainContent = document.querySelector('.main-content');
+            const headings = mainContent.querySelectorAll('h3[id]'); // Only h3s with IDs
+            const tocList = document.getElementById('toc-list');
+
+            if (!tocList) return; // Exit if TOC list not found
+
+            // Build TOC
+            headings.forEach(heading => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `#${heading.id}`;
+                a.textContent = heading.textContent;
+                li.appendChild(a);
+
+                const activeLine = document.createElement('span');
+                activeLine.classList.add('active-line');
+                li.appendChild(activeLine);
+
+                tocList.appendChild(li);
+            });
+
+            // Intersection Observer for active TOC highlighting
+            const observerOptions = {
+                root: null, // viewport
+                rootMargin: '0px 0px -50% 0px', // When 50% of the heading is visible
+                threshold: 0 // Trigger as soon as part of the element enters/exits
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('id');
+                    const tocLink = tocList.querySelector(`a[href="#${id}"]`);
+                    if (tocLink) {
+                        if (entry.isIntersecting) {
+                            tocLink.classList.add('active-link');
+                        } else {
+                            tocLink.classList.remove('active-link');
+                        }
+                    }
+                });
+                // Ensure only one active link at a time by finding the first active
+                const activeLinks = tocList.querySelectorAll('.active-link');
+                if (activeLinks.length > 1) {
+                    let firstActive = null;
+                    for (let i = 0; i < headings.length; i++) {
+                        const headingId = headings[i].getAttribute('id');
+                        const link = tocList.querySelector(`a[href="#${headingId}"]`);
+                        if (link && link.classList.contains('active-link')) {
+                            firstActive = link;
+                            break;
+                        }
+                    }
+                    activeLinks.forEach(link => {
+                        if (link !== firstActive) {
+                            link.classList.remove('active-link');
+                        }
+                    });
+                }
+            }, observerOptions);
+
+            // Observe all content headings
+            headings.forEach(heading => {
+                observer.observe(heading);
+            });
+        });
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc-aside a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
 
     <script>
         // Dropdown Toggle
