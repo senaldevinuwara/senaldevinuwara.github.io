@@ -114,11 +114,21 @@ html, body {
 }
 
 main {
-    /* Ensures the page is at least the height of the screen */
+    /* Sets the width to match your professional Maths page */
+    max-width: 400px; 
+    
+    /* This is the magic line that centers the container */
+    margin: 0 auto; 
+    
+    /* Keeps the jitter fix from before */
     min-height: calc(100vh - 150px); 
     display: block;
-    padding-bottom: 50px;
-    margin: 0 auto; /* This line centers the entire page content */
+    padding: 0 20px 80px 20px; 
+}
+
+/* Ensure the Welcome card and Notes grid take full width of the main container */
+.welcome-card, .notes-grid {
+    width: 100%;
 }
 
 footer {
