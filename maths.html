@@ -222,6 +222,24 @@
 .toc-sub-list.open { display: block; }
 
 .toc-aside a { padding-left: 0; margin-bottom: 4px; font-size: 0.85rem; }
+html {
+    scroll-behavior: smooth;
+    /* This creates a 15% gap at the top so the 'centered' unit 
+       isn't touching your navigation bar */
+    scroll-padding-top: 15vh; 
+}
+
+/* Ensure the progress line is visible on top of the gray border */
+#progress-line {
+    position: absolute;
+    right: -1px;
+    top: 0;
+    width: 2px;
+    background: var(--accent);
+    height: 0%; 
+    transition: height 0.1s ease-out;
+    z-index: 10;
+}
     </style>
 </head>
 <body>
@@ -291,25 +309,23 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+     document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.querySelector('.main-content');
     const tocList = document.getElementById('toc-list');
     const sections = mainContent.querySelectorAll('h2, h3[id]');
     
-    // 1. Add the dynamic progress line element
+    // 1. Setup Progress Line
     const tocAside = document.querySelector('.toc-aside');
     const progressLine = document.createElement('div');
     progressLine.id = 'progress-line';
     tocAside.appendChild(progressLine);
 
-    // 2. Build the Grouped TOC
+    // 2. Build Grouped TOC
     let activeSubList = null;
-
     sections.forEach(heading => {
         if (heading.tagName === 'H2') {
             const li = document.createElement('li');
             li.className = 'toc-unit';
-            
             const header = document.createElement('div');
             header.className = 'toc-unit-header';
             header.innerHTML = `${heading.textContent} <span>▾</span>`;
@@ -317,8 +333,6 @@
             const subList = document.createElement('ul');
             subList.className = 'toc-sub-list';
             
-            // FIX: We use 'subList' here, which is trapped in this loop's scope
-            // so it correctly points to THIS specific unit's list.
             header.addEventListener('click', () => {
                 subList.classList.toggle('open');
             });
@@ -326,10 +340,7 @@
             li.appendChild(header);
             li.appendChild(subList);
             tocList.appendChild(li);
-            
-            // Keep track of the current list to add H3s to it
             activeSubList = subList;
-
         } else if (heading.tagName === 'H3' && activeSubList) {
             const subLi = document.createElement('li');
             const a = document.createElement('a');
@@ -338,7 +349,13 @@
             
             a.addEventListener('click', (e) => {
                 e.preventDefault();
-                document.getElementById(heading.id).scrollIntoView({ behavior: 'smooth' });
+                // Scroll the element into the center of the screen
+                const element = document.getElementById(heading.id);
+                const offset = window.innerHeight / 2 - element.offsetHeight / 2;
+                window.scrollTo({
+                    top: element.offsetTop - offset,
+                    behavior: 'smooth'
+                });
             });
 
             subLi.appendChild(a);
@@ -346,18 +363,19 @@
         }
     });
 
-    // 3. Scroll Logic: Progress Line + Active Highlighting
+    // 3. Middle-of-Screen Highlighting Logic
     window.addEventListener('scroll', () => {
-        // Update Progress Line
         const winScroll = document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
         const scrolled = (winScroll / height) * 100;
         progressLine.style.height = scrolled + "%";
 
-        // Highlight Active link based on scroll
         let currentId = "";
+        const middleOfScreen = window.scrollY + (window.innerHeight / 2);
+
         sections.forEach(section => {
-            if (pageYOffset >= section.offsetTop - 120) {
+            // Check if the middle of the screen has passed the top of the section
+            if (middleOfScreen >= section.offsetTop) {
                 currentId = section.id;
             }
         });
@@ -366,7 +384,6 @@
             link.classList.remove('active-link');
             if (link.getAttribute('href') === `#${currentId}`) {
                 link.classList.add('active-link');
-                // Auto-expand the menu you are currently reading
                 link.closest('.toc-sub-list').classList.add('open');
             }
         });
