@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Research & Guides</title>
+    <style>
+        :root { 
+            --bg: #ffffff; 
+            --text: #1a1a1a; 
+            --accent: #007aff; /* Apple Blue */
+            --subtle: #8e8e93;
+            --card-bg: #f5f5f7; 
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            line-height: 1.6; 
+            color: var(--text); 
+            max-width: 700px; 
+            margin: 60px auto; 
+            padding: 0 25px; 
+            background: var(--bg); 
+        }
+
+        h1 { font-weight: 800; font-size: 2.5rem; margin-bottom: 10px; letter-spacing: -0.02em; }
+        h2 { font-weight: 700; margin-top: 3rem; color: var(--text); }
+        
+        .intro-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+            border: 1px solid #e5e5e7;
+        }
+
+        .intro-text { font-size: 1.1rem; color: #3a3a3c; }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .topic-card {
+            padding: 15px;
+            border: 1px solid #e5e5e7;
+            border-radius: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .topic-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+
+        .tag {
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        footer { margin-top: 80px; padding-bottom: 40px; font-size: 0.9rem; color: var(--subtle); text-align: center; }
+        
+        /* Mobile adjustment for the grid */
+        @media (max-width: 500px) { .topic-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Welcome.</h1>
+        <div class="intro-section">
+            <p class="intro-text">
+                Hi everyone! This is my personal website where I will attach some of the <strong>research</strong> I am doing, who I am, and also guides and teaching material for subjects I find interesting. 
+                <br><br>
+                Whether it's <strong>Biology, Physics, Maths</strong>, or maybe even a tad bit of <strong>Literature</strong> (am I right?), I’ve got it covered. I hope you're doing well and I look forward for you to delve deeper into my notes and papers! 😃
+            </p>
+        </div>
+    </header>
+
+    <main>
+        <h2>Current Research & Notes</h2>
+        <div class="topic-grid">
+            <div class="topic-card">
+                <span class="tag">Mathematics</span>
+                <strong>Calculus I, II, & III</strong>
+                <p style="font-size: 0.9rem; color: #666;">Deep-dives into the math of change, from limits to multivariable flow.</p>
+            </div>
+            <div class="topic-card">
+                <span class="tag">Science</span>
+                <strong>Physics & Bio</strong>
+                <p style="font-size: 0.9rem; color: #666;">Exploring the laws of the universe and the complexity of life.</p>
+            </div>
+            <div class="topic-card">
+                <span class="tag">Papers</span>
+                <strong>Research Archive</strong>
+                <p style="font-size: 0.9rem; color: #666;">Formal papers and documentation of my ongoing projects.</p>
+            </div>
+            <div class="topic-card">
+                <span class="tag">Arts</span>
+                <strong>Literature</strong>
+                <p style="font-size: 0.9rem; color: #666;">Occasional thoughts and analysis on the written word.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 • Built with simplicity on GitHub</p>
+    </footer>
+
+</body>
+</html>
