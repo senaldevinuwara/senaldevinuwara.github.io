@@ -1,2 +1,2 @@
-# senaldevinuwara.github.io
-Personal website for my research papers, what i am doing and also some guides for things I find interesting plus some of my notes.
+# Senal Devinuwara (senthepen ✏️)
+Hi everyone! This is my personal website where I will attach some of the research I am doing, who I am, and also guides and teaching material for subjects I find interseting, (bio, physics, maths, maybe even a tad bit of literature am i right?). Anyways I hope you're doing well and I look forward for you to delve deeper into my website! Personal website for my research papers, what i am doing and also some guides for things I find interesting plus some of my notes. 😃
