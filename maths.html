@@ -224,11 +224,14 @@
 .toc-aside a { padding-left: 0; margin-bottom: 4px; font-size: 0.85rem; }
 html {
     scroll-behavior: smooth;
-    /* This creates a 15% gap at the top so the 'centered' unit 
-       isn't touching your navigation bar */
-    scroll-padding-top: 15vh; 
+    /* Adjusting the jump target slightly higher than middle */
+    scroll-padding-top: 25vh; 
 }
 
+.main-content {
+    /* This extra space allows the last unit to scroll up to eye level */
+    padding-bottom: 80vh; 
+}
 /* Ensure the progress line is visible on top of the gray border */
 #progress-line {
     position: absolute;
@@ -349,11 +352,11 @@ html {
             
             a.addEventListener('click', (e) => {
                 e.preventDefault();
-                // Scroll the element into the center of the screen
                 const element = document.getElementById(heading.id);
-                const offset = window.innerHeight / 2 - element.offsetHeight / 2;
+                // Math to position at 25% from top (eye level)
+                const eyeLevelOffset = window.innerHeight * 0.25;
                 window.scrollTo({
-                    top: element.offsetTop - offset,
+                    top: element.offsetTop - eyeLevelOffset,
                     behavior: 'smooth'
                 });
             });
@@ -363,7 +366,7 @@ html {
         }
     });
 
-    // 3. Middle-of-Screen Highlighting Logic
+    // 3. Scroll Detection logic
     window.addEventListener('scroll', () => {
         const winScroll = document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -371,14 +374,19 @@ html {
         progressLine.style.height = scrolled + "%";
 
         let currentId = "";
-        const middleOfScreen = window.scrollY + (window.innerHeight / 2);
+        // Detection point is 30% down from the top of the viewport
+        const detectionLine = window.scrollY + (window.innerHeight * 0.3);
 
-        sections.forEach(section => {
-            // Check if the middle of the screen has passed the top of the section
-            if (middleOfScreen >= section.offsetTop) {
-                currentId = section.id;
-            }
-        });
+        // Check if we are at the very bottom of the page
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
+            currentId = sections[sections.length - 1].id;
+        } else {
+            sections.forEach(section => {
+                if (detectionLine >= section.offsetTop) {
+                    currentId = section.id;
+                }
+            });
+        }
 
         document.querySelectorAll('.toc-sub-list a').forEach(link => {
             link.classList.remove('active-link');
