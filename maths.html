@@ -5,98 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maths | Senal Devinuwara</title>
     <style>
-        :root { --accent: #007aff; --text: #1a1a1a; --border: #e5e5e7; }
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; margin: 0; color: var(--text); }
+        :root { 
+            --bg: #ffffff; 
+            --text: #1a1a1a; 
+            --accent: #007aff; 
+            --subtle: #8e8e93;
+            --border: #e5e5e7;
+        }
         
-        /* Navigation */
-        nav { display: flex; justify-content: space-between; padding: 20px 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: white; z-index: 100; }
-        .nav-links a { text-decoration: none; color: #8e8e93; margin-left: 20px; font-weight: 500; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            line-height: 1.6; color: var(--text); margin: 0; background: var(--bg); 
+        }
 
-        .container { display: flex; max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 40px; border-bottom: 1px solid var(--border);
+            position: sticky; top: 0; background: rgba(255,255,255,0.8); backdrop-filter: blur(10px); z-index: 1000;
+        }
+        .nav-logo { font-weight: 800; font-size: 1.2rem; text-decoration: none; color: var(--text); }
+        .nav-links a { text-decoration: none; color: var(--subtle); font-size: 0.9rem; font-weight: 500; margin-left: 20px; }
 
-        /* SIDEBAR & DYNAMIC LINE */
-        .sidebar { flex: 0 0 220px; position: sticky; top: 100px; height: fit-content; border-right: 2px solid var(--border); padding-right: 20px; }
+        .container {
+            display: flex; max-width: 1000px; margin: 0 auto; padding: 60px 20px; gap: 50px;
+        }
+
+        /* --- SIDEBAR & DYNAMIC PROGRESS LINE --- */
+        .sidebar {
+            flex: 0 0 220px; position: sticky; top: 120px; align-self: flex-start;
+            padding-right: 20px; border-right: 1px solid var(--border); /* The thin gray line */
+        }
+
+        /* The blue line that fills in */
+        #progress-indicator {
+            position: absolute; right: -1px; top: 0; width: 2px;
+            background: var(--accent); height: 0%; transition: height 0.1s ease-out;
+        }
+
+        .toc-title { font-size: 0.9rem; font-weight: 700; margin-bottom: 20px; color: var(--text); }
         
-        /* This is the line that fills up */
-        #progress-line { position: absolute; right: -2px; top: 0; width: 2px; background: var(--accent); height: 0%; transition: height 0.1s; }
-
-        .toc-unit { margin-bottom: 20px; }
-        .unit-btn { background: none; border: none; font-weight: 700; font-size: 1rem; cursor: pointer; padding: 0; display: block; width: 100%; text-align: left; }
+        .unit-group { margin-bottom: 15px; }
+        .unit-toggle { 
+            font-size: 0.9rem; font-weight: 600; color: var(--accent); cursor: pointer; 
+            display: flex; justify-content: space-between; align-items: center;
+        }
         
-        .sub-links { display: none; list-style: none; padding: 10px 0 0 15px; margin: 0; }
-        .sub-links.active { display: block; }
-        .sub-links a { text-decoration: none; color: #8e8e93; font-size: 0.9rem; display: block; margin-bottom: 8px; }
-        .sub-links a:hover { color: var(--accent); }
+        .sub-links { list-style: none; padding: 10px 0 0 10px; margin: 0; display: none; }
+        .sub-links.open { display: block; }
+        .sub-links a { 
+            text-decoration: none; color: var(--subtle); font-size: 0.85rem; 
+            display: block; margin-bottom: 8px; transition: 0.2s;
+        }
+        .sub-links a:hover, .sub-links a.active { color: var(--accent); }
 
-        /* CONTENT */
-        .content { flex: 1; padding-left: 50px; }
-        h2 { font-size: 2.2rem; margin-top: 0; }
-        section { margin-bottom: 100px; }
-        .spacer { height: 60vh; }
+        /* --- CONTENT --- */
+        .main-content { flex: 1; max-width: 700px; }
+        h1 { font-size: 2.8rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 40px; }
+        h2 { font-size: 2rem; margin-top: 60px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        h3 { font-size: 1.4rem; margin-top: 40px; color: var(--text); }
+        p { color: #3a3a3c; font-size: 1.05rem; margin-bottom: 20px; }
+        .spacer { height: 400px; }
+
+        @media (max-width: 800px) {
+            .container { flex-direction: column; }
+            .sidebar { position: relative; top: 0; border-right: none; border-bottom: 1px solid var(--border); width: 100%; }
+            #progress-indicator { display: none; }
+        }
     </style>
 </head>
 <body>
 
-<nav>
-    <a href="index.html" style="font-weight: 800; text-decoration: none; color: black;">senal.dev</a>
-    <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="maths.html" style="color: var(--accent)">Maths</a>
-        <a href="science.html">Science</a>
+    <nav>
+        <a href="index.html" class="nav-logo">senal.dev</a>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="maths.html" style="color: var(--accent)">Maths</a>
+            <a href="science.html">Science</a>
+            <a href="research.html">Papers</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div id="progress-indicator"></div>
+            <div class="toc-title">On This Page</div>
+            
+            <div class="unit-group">
+                <div class="unit-toggle" onclick="toggleSub('calc-sub')">Calculus ▾</div>
+                <ul class="sub-links" id="calc-sub">
+                    <li><a href="#calc1" class="toc-link">Calculus I</a></li>
+                    <li><a href="#calc2" class="toc-link">Calculus II</a></li>
+                    <li><a href="#calc3" class="toc-link">Calculus III</a></li>
+                </ul>
+            </div>
+
+            <div class="unit-group">
+                <div class="unit-toggle" onclick="toggleSub('linear-sub')">Linear Algebra ▾</div>
+                <ul class="sub-links" id="linear-sub">
+                    <li><a href="#vectors" class="toc-link">Vectors</a></li>
+                    <li><a href="#matrices" class="toc-link">Matrices</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <h1>The World of Mathematics</h1>
+            
+            <section id="calc1">
+                <h2>Calculus I</h2>
+                <h3>The Language of Change</h3>
+                <p>Calculus I introduces the concepts of limits and derivatives. It's about understanding the exact slope of a curve at a single point.</p>
+                            </section>
+
+            <section id="calc2">
+                <h2>Calculus II</h2>
+                <h3>The Art of Accumulation</h3>
+                <p>Here we explore integration—adding up infinite tiny slices to find the total area or volume of complex shapes.</p>
+                            </section>
+
+            <section id="calc3">
+                <h2>Calculus III</h2>
+                <h3>Navigating Higher Dimensions</h3>
+                <p>Extending calculus into 3D space. We use gradients to find the steepest path up a mathematical surface.</p>
+                            </section>
+
+            <section id="vectors">
+                <h2>Linear Algebra</h2>
+                <h3>Vectors & Matrices</h3>
+                <p>The foundations of data science. We treat lists of numbers as points in space and transform them using matrices.</p>
+            </section>
+
+            <div class="spacer"></div>
+        </main>
     </div>
-</nav>
 
-<div class="container">
-    <aside class="sidebar">
-        <div id="progress-line"></div>
-        <div class="toc-unit">
-            <button class="unit-btn" onclick="toggle('calc-sub')">Calculus ▾</button>
-            <ul class="sub-links" id="calc-sub">
-                <li><a href="#calc1">Calculus I</a></li>
-                <li><a href="#calc2">Calculus II</a></li>
-                <li><a href="#calc3">Calculus III</a></li>
-            </ul>
-        </div>
-        <div class="toc-unit">
-            <button class="unit-btn" onclick="toggle('linear-sub')">Linear Algebra ▾</button>
-            <ul class="sub-links" id="linear-sub">
-                <li><a href="#vectors">Vectors</a></li>
-                <li><a href="#matrices">Matrices</a></li>
-            </ul>
-        </div>
-    </aside>
+    <script>
+        // Dropdown Toggle
+        function toggleSub(id) {
+            document.getElementById(id).classList.toggle('open');
+        }
 
-    <main class="content">
-        <section id="calc1">
-            <h2>Calculus I</h2>
-            <p>Focus: Derivatives and Limits. The study of instantaneous change.</p>
+        // Progress Line & Active Highlight
+        window.onscroll = function() {
+            const winScroll = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progress-indicator").style.height = scrolled + "%";
+
+            // Highlight links
+            const sections = document.querySelectorAll("section");
+            const navLinks = document.querySelectorAll(".toc-link");
             
-        </section>
-        <section id="calc2">
-            <h2>Calculus II</h2>
-            <p>Focus: Integrals and Series. The study of accumulation.</p>
-            
-        </section>
-        <section id="calc3">
-            <h2>Calculus III</h2>
-            <p>Focus: Multivariable. 3D surfaces and flow.</p>
-            
-        </section>
-        <div class="spacer"></div>
-    </main>
-</div>
+            sections.forEach(section => {
+                const top = window.scrollY;
+                const offset = section.offsetTop - 150;
+                const height = section.offsetHeight;
+                const id = section.getAttribute("id");
 
-<script>
-    function toggle(id) {
-        document.getElementById(id).classList.toggle('active');
-    }
-
-    window.onscroll = function() {
-        let winScroll = document.documentElement.scrollTop;
-        let height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        let scrolled = (winScroll / height) * 100;
-        document.getElementById("progress-line").style.height = scrolled + "%";
-    };
-</script>
+                if (top >= offset && top < offset + height) {
+                    navLinks.forEach(link => {
+                        link.classList.remove("active");
+                        if (link.getAttribute("href").includes(id)) {
+                            link.classList.add("active");
+                        }
+                    });
+                }
+            });
+        };
+    </script>
 </body>
 </html>
