@@ -253,3 +253,85 @@
     <footer>
         <p>&copy; 2025 • Senal Devinuwara</p>
     </footer>
+
+    <script>
+        // JavaScript for Table of Contents (TOC) with active highlighting
+        document.addEventListener('DOMContentLoaded', () => {
+            const mainContent = document.querySelector('.main-content');
+            const headings = mainContent.querySelectorAll('h3[id]'); // Only h3s with IDs
+            const tocList = document.getElementById('toc-list');
+
+            if (!tocList) return; // Exit if TOC list not found
+
+            // Build TOC
+            headings.forEach(heading => {
+                const li = document.createElement('li');
+                const a = document.createElement('a');
+                a.href = `#${heading.id}`;
+                a.textContent = heading.textContent;
+                li.appendChild(a);
+
+                const activeLine = document.createElement('span');
+                activeLine.classList.add('active-line');
+                li.appendChild(activeLine);
+
+                tocList.appendChild(li);
+            });
+
+            // Intersection Observer for active TOC highlighting
+            const observerOptions = {
+                root: null, // viewport
+                rootMargin: '0px 0px -50% 0px', // When 50% of the heading is visible
+                threshold: 0 // Trigger as soon as part of the element enters/exits
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const id = entry.target.getAttribute('id');
+                    const tocLink = tocList.querySelector(`a[href="#${id}"]`);
+                    if (tocLink) {
+                        if (entry.isIntersecting) {
+                            tocLink.classList.add('active-link');
+                        } else {
+                            tocLink.classList.remove('active-link');
+                        }
+                    }
+                });
+                // Ensure only one active link at a time by finding the first active
+                const activeLinks = tocList.querySelectorAll('.active-link');
+                if (activeLinks.length > 1) {
+                    let firstActive = null;
+                    for (let i = 0; i < headings.length; i++) {
+                        const headingId = headings[i].getAttribute('id');
+                        const link = tocList.querySelector(`a[href="#${headingId}"]`);
+                        if (link && link.classList.contains('active-link')) {
+                            firstActive = link;
+                            break;
+                        }
+                    }
+                    activeLinks.forEach(link => {
+                        if (link !== firstActive) {
+                            link.classList.remove('active-link');
+                        }
+                    });
+                }
+            }, observerOptions);
+
+            // Observe all content headings
+            headings.forEach(heading => {
+                observer.observe(heading);
+            });
+        });
+
+        // Smooth scrolling for TOC links
+        document.querySelectorAll('.toc-aside a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
