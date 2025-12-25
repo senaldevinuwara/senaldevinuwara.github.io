@@ -186,6 +186,42 @@
             nav { flex-direction: column; gap: 15px; margin-bottom: 20px; }
             .main-content { max-width: 100%; }
         }
+        /* Sidebar refinement */
+.toc-aside { border-right: 1px solid var(--border); padding-right: 20px; padding-left: 0; }
+
+/* The vertical progress line that fills up */
+#progress-line {
+    position: absolute;
+    right: -1px;
+    top: 0;
+    width: 2px;
+    background: var(--accent);
+    height: 0%; /* Adjusted by JS */
+    transition: height 0.1s ease-out;
+    z-index: 2;
+}
+
+/* Unit Header Styles */
+.toc-unit-header {
+    font-weight: 700;
+    color: var(--text);
+    cursor: pointer;
+    padding: 8px 0;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+}
+
+/* Subunit list (the dropdown) */
+.toc-sub-list {
+    display: none; /* Hidden by default */
+    padding-left: 15px;
+    margin-bottom: 10px;
+}
+
+.toc-sub-list.open { display: block; }
+
+.toc-aside a { padding-left: 0; margin-bottom: 4px; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -255,83 +291,86 @@
     </footer>
 
     <script>
-        // JavaScript for Table of Contents (TOC) with active highlighting
-        document.addEventListener('DOMContentLoaded', () => {
-            const mainContent = document.querySelector('.main-content');
-            const headings = mainContent.querySelectorAll('h3[id]'); // Only h3s with IDs
-            const tocList = document.getElementById('toc-list');
+      document.addEventListener('DOMContentLoaded', () => {
+    const mainContent = document.querySelector('.main-content');
+    const tocList = document.getElementById('toc-list');
+    const sections = mainContent.querySelectorAll('h2, h3[id]');
+    
+    // 1. Add the dynamic progress line element to the sidebar
+    const tocAside = document.querySelector('.toc-aside');
+    const progressLine = document.createElement('div');
+    progressLine.id = 'progress-line';
+    tocAside.appendChild(progressLine);
 
-            if (!tocList) return; // Exit if TOC list not found
+    // 2. Build the Grouped TOC
+    let currentSubList = null;
 
-            // Build TOC
-            headings.forEach(heading => {
-                const li = document.createElement('li');
-                const a = document.createElement('a');
-                a.href = `#${heading.id}`;
-                a.textContent = heading.textContent;
-                li.appendChild(a);
-
-                const activeLine = document.createElement('span');
-                activeLine.classList.add('active-line');
-                li.appendChild(activeLine);
-
-                tocList.appendChild(li);
+    sections.forEach(heading => {
+        if (heading.tagName === 'H2') {
+            // Create a Parent Unit
+            const li = document.createElement('li');
+            li.className = 'toc-unit';
+            
+            const header = document.createElement('div');
+            header.className = 'toc-unit-header';
+            header.innerHTML = `${heading.textContent} <span>▾</span>`;
+            
+            currentSubList = document.createElement('ul');
+            currentSubList.className = 'toc-sub-list';
+            
+            // Toggle dropdown on click
+            header.addEventListener('click', () => {
+                currentSubList.classList.toggle('open');
             });
 
-            // Intersection Observer for active TOC highlighting
-            const observerOptions = {
-                root: null, // viewport
-                rootMargin: '0px 0px -50% 0px', // When 50% of the heading is visible
-                threshold: 0 // Trigger as soon as part of the element enters/exits
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    const id = entry.target.getAttribute('id');
-                    const tocLink = tocList.querySelector(`a[href="#${id}"]`);
-                    if (tocLink) {
-                        if (entry.isIntersecting) {
-                            tocLink.classList.add('active-link');
-                        } else {
-                            tocLink.classList.remove('active-link');
-                        }
-                    }
-                });
-                // Ensure only one active link at a time by finding the first active
-                const activeLinks = tocList.querySelectorAll('.active-link');
-                if (activeLinks.length > 1) {
-                    let firstActive = null;
-                    for (let i = 0; i < headings.length; i++) {
-                        const headingId = headings[i].getAttribute('id');
-                        const link = tocList.querySelector(`a[href="#${headingId}"]`);
-                        if (link && link.classList.contains('active-link')) {
-                            firstActive = link;
-                            break;
-                        }
-                    }
-                    activeLinks.forEach(link => {
-                        if (link !== firstActive) {
-                            link.classList.remove('active-link');
-                        }
-                    });
-                }
-            }, observerOptions);
-
-            // Observe all content headings
-            headings.forEach(heading => {
-                observer.observe(heading);
-            });
-        });
-
-        // Smooth scrolling for TOC links
-        document.querySelectorAll('.toc-aside a').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+            li.appendChild(header);
+            li.appendChild(currentSubList);
+            tocList.appendChild(li);
+        } else if (heading.tagName === 'H3' && currentSubList) {
+            // Create a Subunit link inside the last created H2 list
+            const subLi = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `#${heading.id}`;
+            a.textContent = heading.textContent;
+            
+            // Smooth scroll
+            a.addEventListener('click', (e) => {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                heading.scrollIntoView({ behavior: 'smooth' });
             });
+
+            subLi.appendChild(a);
+            currentSubList.appendChild(subLi);
+        }
+    });
+
+    // 3. Scroll Logic: Progress Line + Active Highlighting
+    window.addEventListener('scroll', () => {
+        // Update Progress Line
+        const winScroll = document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        progressLine.style.height = scrolled + "%";
+
+        // Highlight Active Sub-link
+        let currentId = "";
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 100) {
+                currentId = section.id;
+            }
         });
+
+        document.querySelectorAll('.toc-sub-list a').forEach(link => {
+            link.classList.remove('active-link');
+            if (link.getAttribute('href') === `#${currentId}`) {
+                link.classList.add('active-link');
+                // Automatically open the parent dropdown if it's active
+                link.closest('.toc-sub-list').classList.add('open');
+            }
+        });
+    });
+});
     </script>
 </body>
 </html>
