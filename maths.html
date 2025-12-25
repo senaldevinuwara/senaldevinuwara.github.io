@@ -291,23 +291,22 @@
     </footer>
 
     <script>
-      document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.querySelector('.main-content');
     const tocList = document.getElementById('toc-list');
     const sections = mainContent.querySelectorAll('h2, h3[id]');
     
-    // 1. Add the dynamic progress line element to the sidebar
+    // 1. Add the dynamic progress line element
     const tocAside = document.querySelector('.toc-aside');
     const progressLine = document.createElement('div');
     progressLine.id = 'progress-line';
     tocAside.appendChild(progressLine);
 
     // 2. Build the Grouped TOC
-    let currentSubList = null;
+    let activeSubList = null;
 
     sections.forEach(heading => {
         if (heading.tagName === 'H2') {
-            // Create a Parent Unit
             const li = document.createElement('li');
             li.className = 'toc-unit';
             
@@ -315,32 +314,35 @@
             header.className = 'toc-unit-header';
             header.innerHTML = `${heading.textContent} <span>▾</span>`;
             
-            currentSubList = document.createElement('ul');
-            currentSubList.className = 'toc-sub-list';
+            const subList = document.createElement('ul');
+            subList.className = 'toc-sub-list';
             
-            // Toggle dropdown on click
+            // FIX: We use 'subList' here, which is trapped in this loop's scope
+            // so it correctly points to THIS specific unit's list.
             header.addEventListener('click', () => {
-                currentSubList.classList.toggle('open');
+                subList.classList.toggle('open');
             });
 
             li.appendChild(header);
-            li.appendChild(currentSubList);
+            li.appendChild(subList);
             tocList.appendChild(li);
-        } else if (heading.tagName === 'H3' && currentSubList) {
-            // Create a Subunit link inside the last created H2 list
+            
+            // Keep track of the current list to add H3s to it
+            activeSubList = subList;
+
+        } else if (heading.tagName === 'H3' && activeSubList) {
             const subLi = document.createElement('li');
             const a = document.createElement('a');
             a.href = `#${heading.id}`;
             a.textContent = heading.textContent;
             
-            // Smooth scroll
             a.addEventListener('click', (e) => {
                 e.preventDefault();
-                heading.scrollIntoView({ behavior: 'smooth' });
+                document.getElementById(heading.id).scrollIntoView({ behavior: 'smooth' });
             });
 
             subLi.appendChild(a);
-            currentSubList.appendChild(subLi);
+            activeSubList.appendChild(subLi);
         }
     });
 
@@ -352,11 +354,10 @@
         const scrolled = (winScroll / height) * 100;
         progressLine.style.height = scrolled + "%";
 
-        // Highlight Active Sub-link
+        // Highlight Active link based on scroll
         let currentId = "";
         sections.forEach(section => {
-            const sectionTop = section.offsetTop;
-            if (pageYOffset >= sectionTop - 100) {
+            if (pageYOffset >= section.offsetTop - 120) {
                 currentId = section.id;
             }
         });
@@ -365,7 +366,7 @@
             link.classList.remove('active-link');
             if (link.getAttribute('href') === `#${currentId}`) {
                 link.classList.add('active-link');
-                // Automatically open the parent dropdown if it's active
+                // Auto-expand the menu you are currently reading
                 link.closest('.toc-sub-list').classList.add('open');
             }
         });
