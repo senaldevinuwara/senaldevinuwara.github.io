@@ -104,6 +104,32 @@
             .topic-grid { grid-template-columns: 1fr; } 
             nav { flex-direction: column; gap: 15px; }
         }
+        /* Replace or add these inside your <style> tags */
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+    /* This makes scrolling feel "native" and smooth on iPad */
+    -webkit-overflow-scrolling: touch; 
+}
+
+main {
+    /* Ensures the page is at least the height of the screen */
+    min-height: calc(100vh - 150px); 
+    display: block;
+    padding-bottom: 50px;
+}
+
+footer {
+    margin-top: auto; 
+    padding: 40px 0;
+    font-size: 0.9rem;
+    color: var(--subtle);
+    text-align: center;
+    border-top: 1px solid var(--border);
+    /* Stops the browser from constantly re-calculating the footer position */
+    contain: layout; 
+}
     </style>
 </head>
 <body>
